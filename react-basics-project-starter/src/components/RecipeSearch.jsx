@@ -19,21 +19,15 @@ export const RecipeSearch = ({ clickFn }) => {
     return recipe.label.toLowerCase().includes(searchField.toLowerCase());
   });
 
-  // const matchedRecipes = recipeList.filter((recipe) => {
-  //   return recipe.healthLabels
-  //     .toLowerCase()
-  //     .includes(searchField.toLowerCase());
-  // });
-
-  const matchedHealthLabels = recipeList.filter((recipe) =>
-    recipe.healthLabels((healthLabel) =>
-      healthLabel.toLowerCase().includes(searchField.toLowerCase())
-    )
-  );
+  // const matchedHealthLabels = recipeList.filter((recipe) =>
+  //   recipe.healthLabels((healthLabel) =>
+  //     healthLabel.toLowerCase().includes(searchField.toLowerCase())
+  //   )
+  // );
   console.log("Recipes");
-  console.log(matchedRecipes);
-  console.log("HealthLabels");
-  console.log(matchedHealthLabels);
+  console.log(matchedRecipes); // shows recipes filtered by recipe label in searchbar
+  // console.log("HealthLabels");
+  // console.log(matchedHealthLabels); // shows recipes filtered by Healthlabel in searchbar
   //   console.log(searchField);
   //   console.log("recipeName");
   //   console.log(recipeLabel);
