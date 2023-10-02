@@ -1,5 +1,5 @@
 import { RecipeCard } from "../components/RecipeCard";
-import { Grid } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 
 export const RecipeList = ({ recipes, clickFn }) => {
   // You can play around with the console log, but ultimately remove it once you are done
@@ -7,11 +7,11 @@ export const RecipeList = ({ recipes, clickFn }) => {
 
   return (
     <>
-      <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+      <SimpleGrid columns={[1, null, 3]} spacing="40px">
         {recipes.map((recipe) => (
           <RecipeCard key={recipe.label} recipe={recipe} clickFn={clickFn} />
         ))}
-      </Grid>
+      </SimpleGrid>
     </>
   );
 };
