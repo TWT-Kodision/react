@@ -1,5 +1,15 @@
-import { React, useState } from "react";
-import { Heading } from "@chakra-ui/react";
+import { React } from "react";
+import {
+  Heading,
+  Image,
+  Text,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Stack,
+} from "@chakra-ui/react";
+import { EditEvent } from "../components/EditEvent";
 import { useLoaderData } from "react-router-dom";
 
 export const loader = async ({ params }) => {
@@ -17,11 +27,9 @@ export const loader = async ({ params }) => {
 
 export const EventPage = () => {
   const { event, categories, users } = useLoaderData();
-
-  const userObject = users.filter((user) => {
-    return user.id.includes(event.createdBy);
-  });
-
+  const user = users.filter((user) => {
+    return user.id == event.createdBy;
+  })[0];
   const categoryList = () => {
     const selectCategory = [];
     event.categoryIds.map((categoryId) =>
@@ -32,20 +40,40 @@ export const EventPage = () => {
     return selectCategory.toString();
   };
 
-  const getUserInfo = () => {
-    console.log(event.createdBy);
-    users.map((user) => {
-      if (user.id === event.createdBy) {
-        console.log("test");
-      }
-    });
+  const convertDateToNormalPeopleFormat = (date) => {
+    const convertedDate =
+      date.slice(8, 10) + "-" + date.slice(5, 7) + "-" + date.slice(0, 4);
+    return convertedDate;
   };
 
   return (
     <>
-      <Heading> {event.title}</Heading>
-      <p> {categoryList()}</p>
-      <p>{getUserInfo()}</p>
+      <Card gap={8} align="center" bg={"green.200"}>
+        <CardHeader size="lg">
+          <Heading align="center" color="tomato" m={3}>
+            {event.title}
+          </Heading>
+          <Image src={event.image} borderRadius="lg" boxSize="lg" />
+        </CardHeader>
+        <CardBody>
+          <Text>Description: {event.description} </Text>
+          <Text>Location: {event.location} </Text>
+          <Text>
+            Date:{" "}
+            {convertDateToNormalPeopleFormat(event.startTime.slice(0, 10))}{" "}
+          </Text>
+          <Text>Starttime: {event.startTime.slice(11, 16)} </Text>
+          <Text>Endtime: {event.endTime.slice(11, 16)} </Text>
+          <Text>Category: {categoryList()}</Text>
+        </CardBody>
+        <CardFooter>
+          <Stack spacing={[1, 5]} direction={["column", "row"]}>
+            <Text>Created by: {user.name}</Text>
+            <Image src={user.image} borderRadius="sm" boxSize="100px" />
+          </Stack>
+        </CardFooter>
+        <EditEvent />
+      </Card>
     </>
   );
 };
