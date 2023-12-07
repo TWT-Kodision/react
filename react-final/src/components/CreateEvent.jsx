@@ -7,7 +7,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { EventForm } from "../pages/EventForm";
+import { EventForm } from "./EventForm";
 
 export const CreateEvent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

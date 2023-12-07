@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useState, React } from "react";
-import { addEvent } from "../components/connectToAPI";
+import { addEvent } from "./connectToAPI";
 import { useLoaderData } from "react-router-dom";
 
 export const loader = async () => {
