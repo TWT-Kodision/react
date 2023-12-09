@@ -14,7 +14,8 @@ import {
 } from "@chakra-ui/react";
 
 import { useState, React } from "react";
-import { addEvent } from "./connectToAPI";
+
+import { addEvent } from "../components/connectToAPI";
 import { useLoaderData } from "react-router-dom";
 
 export const loader = async () => {
@@ -31,15 +32,32 @@ export const loader = async () => {
 export const EventForm = ({ isOpen, onClose, formLabels }) => {
   const { events, categories, users } = useLoaderData();
 
-  const [title, setTitle] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [description, setDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [date, setDate] = useState("");
-  const [image, setImage] = useState("");
-  const [category, setCategory] = useState();
-  const [user, setUser] = useState("");
+  const isEdit = formLabels.action == "edit";
+  console.log(isEdit);
+
+  const [title, setTitle] = useState(
+    isEdit ? formLabels.placeholders.title : ""
+  );
+  const [startTime, setStartTime] = useState(
+    isEdit ? formLabels.placeholders.starttime : ""
+  );
+  const [endTime, setEndTime] = useState(
+    isEdit ? formLabels.placeholders.endtime : ""
+  );
+  const [description, setDescription] = useState(
+    isEdit ? formLabels.placeholders.description : ""
+  );
+  const [location, setLocation] = useState(
+    isEdit ? formLabels.placeholders.location : ""
+  );
+  const [date, setDate] = useState(isEdit ? formLabels.placeholders.date : "");
+  const [image, setImage] = useState(
+    isEdit ? formLabels.placeholders.image : ""
+  );
+  const [category, setCategory] = useState(
+    isEdit ? formLabels.placeholders.categories : ""
+  );
+  const [user, setUser] = useState(isEdit ? formLabels.placeholders.user : "");
 
   const isEmpty =
     title === "" ||
@@ -89,13 +107,36 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
     return eventObject;
   };
 
+  const newEventActions = () => {
+    const eventobject = makeEventObject();
+    addEvent(eventobject);
+    window.location.reload(false);
+  };
+
+  const editEventActions = () => {
+    const eventobject = makeEventObject();
+    console.log(eventobject);
+    window.location.reload(false);
+  };
+
+  const clickSendAction = (action) => {
+    switch (action) {
+      case "new":
+        return newEventActions();
+      case "edit":
+        return editEventActions();
+      default:
+        return newEventActions();
+    }
+  };
+
   //Form =================================================================================
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create event</ModalHeader>
+          <ModalHeader>{formLabels.formTitle}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl isRequired>
@@ -117,7 +158,7 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
               <Input
                 type="text"
                 required="required"
-                placeholder={formLabels.placeholders.tile}
+                placeholder={formLabels.placeholders.title}
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
               />
@@ -201,11 +242,7 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
               <>
                 <Button
                   onClick={() => {
-                    const eventobject = makeEventObject();
-                    console.log(eventobject);
-                    addEvent(eventobject);
-                    window.location.reload(false);
-                    console.log("click");
+                    clickSendAction(formLabels.action);
                   }}
                   colorScheme="blue"
                   mr={3}
@@ -222,4 +259,3 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
     </>
   );
 };
-////window.location.reload(false);

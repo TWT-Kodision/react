@@ -77,6 +77,19 @@
       "location": "asdfasdf",
       "startTime": "2023-12-03T01:16",
       "endTime": "2023-12-03T01:17"
+    },
+    {
+      "id": 6,
+      "createdBy": 2,
+      "title": "test 3",
+      "description": "sedf",
+      "image": "asdf",
+      "categoryIds": [
+        2
+      ],
+      "location": "asdfa",
+      "startTime": "2023-12-02T23:38",
+      "endTime": "2023-12-02T01:36"
     }
   ],
   "categories": [

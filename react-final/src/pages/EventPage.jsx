@@ -10,10 +10,10 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { EditEvent } from "../components/EditEvent";
+import { DeleteEvent } from "../components/DeleteEvent";
 import { useLoaderData } from "react-router-dom";
 
 export const loader = async ({ params }) => {
-  console.log({ params });
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
   const categories = await fetch("http://localhost:3000/categories");
   const users = await fetch("http://localhost:3000/users");
@@ -30,6 +30,7 @@ export const EventPage = () => {
   const user = users.filter((user) => {
     return user.id == event.createdBy;
   })[0];
+
   const categoryList = () => {
     const selectCategory = [];
     event.categoryIds.map((categoryId) =>
@@ -46,6 +47,12 @@ export const EventPage = () => {
     return convertedDate;
   };
 
+  const convertedDateTime = {
+    starttime: event.startTime.slice(11, 16),
+    endtime: event.endTime.slice(11, 16),
+    date: convertDateToNormalPeopleFormat(event.startTime.slice(0, 10)),
+  };
+
   return (
     <>
       <Card gap={8} align="center" bg={"green.200"}>
@@ -58,12 +65,9 @@ export const EventPage = () => {
         <CardBody>
           <Text>Description: {event.description} </Text>
           <Text>Location: {event.location} </Text>
-          <Text>
-            Date:{" "}
-            {convertDateToNormalPeopleFormat(event.startTime.slice(0, 10))}{" "}
-          </Text>
-          <Text>Starttime: {event.startTime.slice(11, 16)} </Text>
-          <Text>Endtime: {event.endTime.slice(11, 16)} </Text>
+          <Text>Date:{convertedDateTime.date}</Text>
+          <Text>Starttime: {convertedDateTime.starttime} </Text>
+          <Text>Endtime: {convertedDateTime.endtime} </Text>
           <Text>Category: {categoryList()}</Text>
         </CardBody>
         <CardFooter>
@@ -72,7 +76,16 @@ export const EventPage = () => {
             <Image src={user.image} borderRadius="sm" boxSize="100px" />
           </Stack>
         </CardFooter>
-        <EditEvent />
+        <Stack spacing={[1, 5]} direction={["column", "row"]}>
+          {" "}
+          <EditEvent
+            categories={categoryList()}
+            user={user}
+            eventInfo={event}
+            dateTime={convertedDateTime}
+          />
+          <DeleteEvent />
+        </Stack>
       </Card>
     </>
   );

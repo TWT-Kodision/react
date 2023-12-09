@@ -26,6 +26,8 @@ export const CreateEvent = () => {
     buttons: {
       sendButton: "Add new event",
     },
+    formTitle: "Create event",
+    action: "new",
   };
 
   return (
