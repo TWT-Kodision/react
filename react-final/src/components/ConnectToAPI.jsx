@@ -6,7 +6,7 @@ export const addEvent = async (newEvent) => {
     headers: { "Content-Type": "application/json;charset=utf-8" },
   });
   newEvent.id = (await response.json()).id;
-  console.log("addEvent API");
+  console.log("add event API");
 };
 
 export const updateEvent = async (newContent) => {
@@ -23,16 +23,16 @@ export const updateEvent = async (newContent) => {
   console.log("edit event API");
 };
 
-export const deleteEvent = async (newContent) => {
+export const deleteEvent = async (deleteContent) => {
   // No error handling, normally you would do that.
   const response = await fetch(
-    `http://localhost:3000/events/${newContent.id}`,
+    `http://localhost:3000/events/${deleteContent.id}`,
     {
       method: "DELETE",
-      body: JSON.stringify(newContent),
+      body: JSON.stringify(deleteContent),
       headers: { "Content-Type": "application/json;charset=utf-8" },
     }
   );
-  newContent.id = (await response.json()).id;
+  deleteContent.id = (await response.json()).id;
   console.log("delete event API");
 };
