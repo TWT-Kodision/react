@@ -29,11 +29,10 @@ export const loader = async () => {
   };
 };
 
-export const EventForm = ({ isOpen, onClose, formLabels }) => {
+export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
   const { events, categories, users } = useLoaderData();
 
   const isEdit = formLabels.action == "edit";
-  console.log(isEdit);
 
   const [title, setTitle] = useState(
     isEdit ? formLabels.placeholders.title : ""
@@ -50,7 +49,7 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
   const [location, setLocation] = useState(
     isEdit ? formLabels.placeholders.location : ""
   );
-  const [date, setDate] = useState(isEdit ? formLabels.placeholders.date : "");
+  const [date, setDate] = useState(isEdit ? formLabels.placeholders.date : ""); // date format?
   const [image, setImage] = useState(
     isEdit ? formLabels.placeholders.image : ""
   );
@@ -94,7 +93,7 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
 
   const makeEventObject = () => {
     const eventObject = {
-      id: getNewEventId(),
+      id: isEdit ? formLabels.placeholders.id : getNewEventId(),
       createdBy: user,
       title: title,
       description: description,
@@ -108,15 +107,14 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
   };
 
   const newEventActions = () => {
-    const eventobject = makeEventObject();
-    addEvent(eventobject);
+    const newEventObject = makeEventObject();
+    addEvent(newEventObject);
     window.location.reload(false);
   };
 
   const editEventActions = () => {
-    const eventobject = makeEventObject();
-    console.log(eventobject);
-    window.location.reload(false);
+    const editedEventObject = makeEventObject();
+    newEventObject(editedEventObject);
   };
 
   const clickSendAction = (action) => {
@@ -243,6 +241,7 @@ export const EventForm = ({ isOpen, onClose, formLabels }) => {
                 <Button
                   onClick={() => {
                     clickSendAction(formLabels.action);
+                    onClose();
                   }}
                   colorScheme="blue"
                   mr={3}

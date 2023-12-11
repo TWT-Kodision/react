@@ -1,19 +1,33 @@
 import { useDisclosure, Modal, Button } from "@chakra-ui/react";
-
+import { useState } from "react";
 import { EventForm } from "./EventForm";
 
-export const EditEvent = ({ categories, user, eventInfo, dateTime }) => {
+export const EditEvent = ({
+  categories: eventCategories,
+  user,
+  events,
+  eventInfo,
+  dateTime,
+  usersAndCategories,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  console.log(eventInfo.title);
-  console.log(categories);
+  const [editedEventsList, setEditedEventsList] = useState([]);
+
+  //converts date to yyyy-MM-dd
+  const convertDate = (date) => {
+    const [day, month, year] = date.split("-");
+    return year + "-" + month + "-" + day;
+  };
+
   const formLabels = {
     placeholders: {
+      id: eventInfo.id,
       user: user.name,
       title: eventInfo.title,
       description: eventInfo.description,
-      category: categories,
+      category: eventCategories,
       image: eventInfo.image,
-      date: dateTime.date,
+      date: convertDate(dateTime.date),
       starttime: dateTime.starttime,
       endtime: dateTime.endtime,
       location: eventInfo.location,
@@ -25,11 +39,31 @@ export const EditEvent = ({ categories, user, eventInfo, dateTime }) => {
     action: "edit",
   };
 
-  const click = () => {
-    return "click";
+  const editEventList = (editedEvent) => {
+    const newList = [];
+    console.log(editedEvent);
+    events.map((event) => {
+      newList.push(event.id == editedEvent.id ? editedEvent : event);
+      setEditedEventsList(newList);
+    });
   };
 
-  console.log(eventInfo);
+  const getEditedEventObject = (editedEventObject) => {
+    console.log(editedEventObject);
+    console.log("event edited");
+    return editedEventObject;
+  };
+
+  const makeNewObjectComplete = (editedEventObject) => {
+    editEventList(getEditedEventObject(editedEventObject));
+    const newJsonContent = {
+      users: usersAndCategories.users,
+      events: editedEventsList,
+      catagories: usersAndCategories.categories,
+    };
+    console.log(newJsonContent);
+  };
+
   return (
     <ul>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -37,12 +71,11 @@ export const EditEvent = ({ categories, user, eventInfo, dateTime }) => {
           isOpen={isOpen}
           onClose={onClose}
           formLabels={formLabels}
-          click={click}
+          newEventObject={makeNewObjectComplete}
         />
       </Modal>
       <Button
         onClick={() => {
-          console.log("test test");
           onOpen();
         }}
         colorScheme="blue"

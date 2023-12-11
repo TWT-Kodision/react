@@ -14,11 +14,13 @@ import { DeleteEvent } from "../components/DeleteEvent";
 import { useLoaderData } from "react-router-dom";
 
 export const loader = async ({ params }) => {
+  const events = await fetch(`http://localhost:3000/events`);
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
   const categories = await fetch("http://localhost:3000/categories");
   const users = await fetch("http://localhost:3000/users");
 
   return {
+    events: await events.json(),
     event: await event.json(),
     categories: await categories.json(),
     users: await users.json(),
@@ -26,11 +28,11 @@ export const loader = async ({ params }) => {
 };
 
 export const EventPage = () => {
-  const { event, categories, users } = useLoaderData();
+  const { events, event, categories, users } = useLoaderData();
+  const usersAndCategories = { users: users, categories: categories };
   const user = users.filter((user) => {
     return user.id == event.createdBy;
   })[0];
-
   const categoryList = () => {
     const selectCategory = [];
     event.categoryIds.map((categoryId) =>
@@ -79,10 +81,12 @@ export const EventPage = () => {
         <Stack spacing={[1, 5]} direction={["column", "row"]}>
           {" "}
           <EditEvent
-            categories={categoryList()}
+            eventCategories={categoryList()}
             user={user}
+            events={events}
             eventInfo={event}
             dateTime={convertedDateTime}
+            usersAndCategories={usersAndCategories}
           />
           <DeleteEvent />
         </Stack>

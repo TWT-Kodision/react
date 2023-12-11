@@ -90,6 +90,19 @@
       "location": "asdfa",
       "startTime": "2023-12-02T23:38",
       "endTime": "2023-12-02T01:36"
+    },
+    {
+      "id": 7,
+      "createdBy": 1,
+      "title": "asd",
+      "description": "asd",
+      "image": "aasdf",
+      "categoryIds": [
+        1
+      ],
+      "location": "asdf",
+      "startTime": "2023-12-03T01:34",
+      "endTime": "2023-12-03T01:34"
     }
   ],
   "categories": [
