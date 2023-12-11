@@ -6,7 +6,7 @@ import {
   CardBody,
   Text,
 } from "@chakra-ui/react";
-
+import { addEvent } from "./connectToAPI";
 import { EventForm } from "./EventForm";
 
 export const CreateEvent = () => {
@@ -30,10 +30,21 @@ export const CreateEvent = () => {
     action: "new",
   };
 
+  const addNewEvent = (newEventObject) => {
+    addEvent(newEventObject);
+    window.location.reload(false);
+    onClose();
+  };
+
   return (
     <ul>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <EventForm isOpen={isOpen} onClose={onClose} formLabels={formLabels} />
+        <EventForm
+          isOpen={isOpen}
+          onClose={onClose}
+          formLabels={formLabels}
+          newEventObject={addNewEvent}
+        />
       </Modal>
       <Card
         gap={8}

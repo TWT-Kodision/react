@@ -2,14 +2,14 @@ import { Image, Text, Card, CardHeader, CardBody } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 export const EventCard = ({ event, categories }) => {
-  // filter categories using categoryIds in event
+  // get categories name using categoryIds in event
   const categoryList = () => {
     const selectCategory = [];
-    event.categoryIds.map((categoryId) =>
+    event.categoryIds.map((categoryId) => {
       selectCategory.push(
         categories.find((category) => categoryId == category.id).name
-      )
-    );
+      );
+    });
 
     return selectCategory.toString();
   };

@@ -1,18 +1,15 @@
 import { useDisclosure, Modal, Button } from "@chakra-ui/react";
-import { useState } from "react";
 import { EventForm } from "./EventForm";
+import { updateEvent } from "./connectToAPI";
 
 export const EditEvent = ({
   categories: eventCategories,
   user,
-  events,
   eventInfo,
   dateTime,
-  usersAndCategories,
+  setEvent,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [editedEventsList, setEditedEventsList] = useState([]);
-
   //converts date to yyyy-MM-dd
   const convertDate = (date) => {
     const [day, month, year] = date.split("-");
@@ -22,7 +19,7 @@ export const EditEvent = ({
   const formLabels = {
     placeholders: {
       id: eventInfo.id,
-      user: user.name,
+      user: user.id,
       title: eventInfo.title,
       description: eventInfo.description,
       category: eventCategories,
@@ -39,29 +36,10 @@ export const EditEvent = ({
     action: "edit",
   };
 
-  const editEventList = (editedEvent) => {
-    const newList = [];
-    console.log(editedEvent);
-    events.map((event) => {
-      newList.push(event.id == editedEvent.id ? editedEvent : event);
-      setEditedEventsList(newList);
-    });
-  };
-
   const getEditedEventObject = (editedEventObject) => {
-    console.log(editedEventObject);
-    console.log("event edited");
-    return editedEventObject;
-  };
-
-  const makeNewObjectComplete = (editedEventObject) => {
-    editEventList(getEditedEventObject(editedEventObject));
-    const newJsonContent = {
-      users: usersAndCategories.users,
-      events: editedEventsList,
-      catagories: usersAndCategories.categories,
-    };
-    console.log(newJsonContent);
+    updateEvent(editedEventObject);
+    setEvent(editedEventObject);
+    onClose();
   };
 
   return (
@@ -71,7 +49,7 @@ export const EditEvent = ({
           isOpen={isOpen}
           onClose={onClose}
           formLabels={formLabels}
-          newEventObject={makeNewObjectComplete}
+          newEventObject={getEditedEventObject}
         />
       </Modal>
       <Button

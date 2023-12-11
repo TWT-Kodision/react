@@ -14,8 +14,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useState, React } from "react";
-
-import { addEvent } from "../components/connectToAPI";
+import { Toast } from "./Utils";
 import { useLoaderData } from "react-router-dom";
 
 export const loader = async () => {
@@ -53,9 +52,7 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
   const [image, setImage] = useState(
     isEdit ? formLabels.placeholders.image : ""
   );
-  const [category, setCategory] = useState(
-    isEdit ? formLabels.placeholders.categories : ""
-  );
+  const [category, setCategory] = useState(isEdit ? "" : "");
   const [user, setUser] = useState(isEdit ? formLabels.placeholders.user : "");
 
   const isEmpty =
@@ -107,13 +104,14 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
   };
 
   const newEventActions = () => {
-    const newEventObject = makeEventObject();
-    addEvent(newEventObject);
-    window.location.reload(false);
+    const eventObject = makeEventObject();
+    newEventObject(eventObject);
   };
 
   const editEventActions = () => {
     const editedEventObject = makeEventObject();
+    console.log("form editeventactions");
+    console.log(editedEventObject);
     newEventObject(editedEventObject);
   };
 
@@ -140,10 +138,10 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
             <FormControl isRequired>
               <FormLabel>User</FormLabel>
               <Select
-                placeholder={formLabels.placeholders.user}
                 required="required"
                 onChange={(e) => setUser(Number(e.target.value))}
                 value={user}
+                placeholder="select user"
               >
                 {users.map((user) => (
                   <option key={user.id} value={user.id}>
@@ -156,7 +154,6 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
               <Input
                 type="text"
                 required="required"
-                placeholder={formLabels.placeholders.title}
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}
               />
@@ -165,17 +162,16 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
               <Input
                 type="text"
                 required="required"
-                placeholder={formLabels.placeholders.description}
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
               />
 
               <FormLabel>Category</FormLabel>
               <Select
-                placeholder={formLabels.placeholders.category}
                 required="required"
                 onChange={(e) => setCategory(Number(e.target.value))}
                 value={category}
+                placeholder="select category"
               >
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
@@ -188,7 +184,6 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
               <Input
                 type="url"
                 required="required"
-                placeholder={formLabels.placeholders.image}
                 onChange={(e) => setImage(e.target.value)}
                 value={image}
               />
@@ -197,7 +192,6 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
               <Input
                 type="date"
                 required="required"
-                placeholder={formLabels.placeholders.date}
                 onChange={(e) => setDate(e.target.value)}
                 value={date}
               />
@@ -206,7 +200,6 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
               <Input
                 type="time"
                 required="required"
-                placeholder={formLabels.placeholders.starttime}
                 onChange={(e) => setStartTime(e.target.value)}
                 value={startTime}
               />
@@ -215,7 +208,6 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
               <Input
                 type="time"
                 required="required"
-                placeholder={formLabels.placeholders.endtime}
                 onChange={(e) => setEndTime(e.target.value)}
                 value={endTime}
               />
@@ -224,7 +216,6 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
               <Input
                 type="text"
                 required="required"
-                placeholder={formLabels.placeholders.location}
                 onChange={(e) => setLocation(e.target.value)}
                 value={location}
               />
@@ -241,7 +232,8 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
                 <Button
                   onClick={() => {
                     clickSendAction(formLabels.action);
-                    onClose();
+                    onClose;
+                    Toast();
                   }}
                   colorScheme="blue"
                   mr={3}

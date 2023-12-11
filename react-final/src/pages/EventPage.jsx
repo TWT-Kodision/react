@@ -12,23 +12,23 @@ import {
 import { EditEvent } from "../components/EditEvent";
 import { DeleteEvent } from "../components/DeleteEvent";
 import { useLoaderData } from "react-router-dom";
+import { useState } from "react";
 
 export const loader = async ({ params }) => {
-  const events = await fetch(`http://localhost:3000/events`);
   const event = await fetch(`http://localhost:3000/events/${params.eventId}`);
   const categories = await fetch("http://localhost:3000/categories");
   const users = await fetch("http://localhost:3000/users");
 
   return {
-    events: await events.json(),
-    event: await event.json(),
+    eventData: await event.json(),
     categories: await categories.json(),
     users: await users.json(),
   };
 };
 
 export const EventPage = () => {
-  const { events, event, categories, users } = useLoaderData();
+  const { eventData, categories, users } = useLoaderData();
+  const [event, setEvent] = useState(eventData);
   const usersAndCategories = { users: users, categories: categories };
   const user = users.filter((user) => {
     return user.id == event.createdBy;
@@ -83,10 +83,10 @@ export const EventPage = () => {
           <EditEvent
             eventCategories={categoryList()}
             user={user}
-            events={events}
             eventInfo={event}
             dateTime={convertedDateTime}
             usersAndCategories={usersAndCategories}
+            setEvent={setEvent}
           />
           <DeleteEvent />
         </Stack>
