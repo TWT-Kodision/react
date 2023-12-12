@@ -6,11 +6,11 @@ import {
   CardBody,
   Text,
 } from "@chakra-ui/react";
-import { addEvent } from "./connectToAPI";
+import { addEvent } from "./ConnectToAPI";
 import { EventForm } from "./EventForm";
-
-export const CreateEvent = () => {
+export const CreateEvent = ({ setEventsList }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const formLabels = {
     placeholders: {
       user: "Select user",
@@ -32,8 +32,9 @@ export const CreateEvent = () => {
 
   const addNewEvent = (newEventObject) => {
     addEvent(newEventObject);
-    window.location.reload(false);
     onClose();
+    setEventsList(newEventObject);
+    window.location.reload(false);
   };
 
   return (

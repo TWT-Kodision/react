@@ -38,9 +38,8 @@ export const EventsPage = () => {
             categories={categories}
           />
         ))}
-        <CreateEvent />
+        <CreateEvent setEventsList={setEventsList} />
       </SimpleGrid>
     </>
   );
 };
-// <EventsFilter evenstList={eventsList} setEventsList={setEventsList} />

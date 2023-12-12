@@ -1,7 +1,7 @@
-import { useDisclosure, Modal, Button } from "@chakra-ui/react";
+import { useDisclosure, Modal, Button, useToast } from "@chakra-ui/react";
 import { EventForm } from "./EventForm";
-import { updateEvent } from "./connectToAPI";
-
+import { updateEvent } from "./ConnectToAPI";
+import { useState } from "react";
 export const EditEvent = ({
   categories: eventCategories,
   user,
@@ -15,6 +15,14 @@ export const EditEvent = ({
     const [day, month, year] = date.split("-");
     return year + "-" + month + "-" + day;
   };
+
+  const [toastParam, setToastParam] = useState({
+    title: "Event changed succesfully",
+    description: "Event has been changed",
+    status: "success",
+    duration: 3000,
+    isClosable: true,
+  });
 
   const formLabels = {
     placeholders: {
@@ -35,11 +43,13 @@ export const EditEvent = ({
     formTitle: "Edit event",
     action: "edit",
   };
-
+  const toast = useToast();
   const getEditedEventObject = (editedEventObject) => {
     updateEvent(editedEventObject);
     setEvent(editedEventObject);
     onClose();
+
+    toast(toastParam);
   };
 
   return (

@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/react";
 
 import { useState, React } from "react";
-import { Toast } from "./Utils";
 import { useLoaderData } from "react-router-dom";
 
 export const loader = async () => {
@@ -233,7 +232,6 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
                   onClick={() => {
                     clickSendAction(formLabels.action);
                     onClose;
-                    Toast();
                   }}
                   colorScheme="blue"
                   mr={3}

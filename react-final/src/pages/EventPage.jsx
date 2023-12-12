@@ -88,7 +88,7 @@ export const EventPage = () => {
             usersAndCategories={usersAndCategories}
             setEvent={setEvent}
           />
-          <DeleteEvent />
+          <DeleteEvent eventInfo={event} />
         </Stack>
       </Card>
     </>
