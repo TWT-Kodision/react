@@ -38,7 +38,7 @@ export const EventsPage = () => {
             categories={categories}
           />
         ))}
-        <CreateEvent setEventsList={setEventsList} />
+        <CreateEvent />
       </SimpleGrid>
     </>
   );

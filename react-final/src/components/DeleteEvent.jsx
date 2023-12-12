@@ -10,20 +10,68 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { React, useState } from "react";
-import { deleteEvent } from "./ConnectToAPI";
 import { useNavigate } from "react-router-dom";
 
 export const DeleteEvent = (eventInfo) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const noErrorState = { happened: false, msg: "" };
+  const [error, setError] = useState(noErrorState);
   const toast = useToast();
-  const [toastParam, setToastParam] = useState({
+  const succesToastParam = {
     title: "Event deleted succesfully",
-    description: "Event is permantly deleted",
+    description: "Event has been deleted",
     status: "success",
     duration: 3000,
     isClosable: true,
-  });
+  };
+
+  const errorToastParam = {
+    title: "Error: Event not deleted",
+    description: "server error: " + error.msg,
+    status: "error",
+    duration: 6000,
+    isClosable: true,
+  };
+
+  const deleteEventOnServer = async (deleteContent) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/events/${deleteContent.id}`,
+        {
+          method: "DELETE",
+          body: JSON.stringify(deleteContent),
+          headers: { "Content-Type": "application/json;charset=utf-8" },
+        }
+      ).then((response) => {
+        if (!response.ok) {
+          setError({
+            happened: true,
+            msg: response.status,
+          });
+          throw new Error(response);
+        }
+      });
+      deleteContent.id = (await response.json()).id;
+      console.log("delete event API");
+    } catch (err) {
+      console.log("error");
+      setError({
+        happened: true,
+        msg: err.message,
+      });
+      toast(errorToastParam);
+    }
+  };
+
+  const deleteActions = () => {
+    deleteEventOnServer(eventInfo.eventInfo);
+    if (!error.happened) {
+      onClose();
+      navigate(`/events`);
+      toast(succesToastParam);
+    }
+  };
 
   return (
     <ul>
@@ -52,10 +100,7 @@ export const DeleteEvent = (eventInfo) => {
               <Button
                 colorScheme="red"
                 onClick={() => {
-                  deleteEvent(eventInfo.eventInfo);
-                  onClose();
-                  navigate(`/events`);
-                  toast(toastParam);
+                  deleteActions();
                 }}
                 ml={3}
               >

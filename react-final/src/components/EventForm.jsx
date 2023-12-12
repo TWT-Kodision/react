@@ -27,7 +27,7 @@ export const loader = async () => {
   };
 };
 
-export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
+export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
   const { events, categories, users } = useLoaderData();
 
   const isEdit = formLabels.action == "edit";
@@ -104,14 +104,12 @@ export const EventForm = ({ isOpen, onClose, formLabels, newEventObject }) => {
 
   const newEventActions = () => {
     const eventObject = makeEventObject();
-    newEventObject(eventObject);
+    formActions(eventObject);
   };
 
   const editEventActions = () => {
     const editedEventObject = makeEventObject();
-    console.log("form editeventactions");
-    console.log(editedEventObject);
-    newEventObject(editedEventObject);
+    formActions(editedEventObject);
   };
 
   const clickSendAction = (action) => {

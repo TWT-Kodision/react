@@ -5,11 +5,22 @@ import {
   CardHeader,
   CardBody,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { addEvent } from "./ConnectToAPI";
+import { useState } from "react";
 import { EventForm } from "./EventForm";
-export const CreateEvent = ({ setEventsList }) => {
+export const CreateEvent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const noErrorState = { happened: false, msg: "" };
+  const [error, setError] = useState(noErrorState);
+  const toast = useToast();
+  const serverError = {
+    title: "Something went wrong while creating the event",
+    description: "server error: " + error.msg,
+    status: "error",
+    duration: 5000,
+    isClosable: true,
+  };
 
   const formLabels = {
     placeholders: {
@@ -30,11 +41,39 @@ export const CreateEvent = ({ setEventsList }) => {
     action: "new",
   };
 
+  const addEventToServer = async (newEvent) => {
+    try {
+      const response = await fetch("http://localhost:3000/events", {
+        method: "POST",
+        body: JSON.stringify(newEvent),
+        headers: { "Content-Type": "application/json;charset=utf-8" },
+      }).then((response) => {
+        if (!response.ok) {
+          setError({
+            happened: true,
+            msg: response.status,
+          });
+          throw new Error(response);
+        }
+      });
+      newEvent.id = (await response.json()).id;
+      console.log("add event API");
+    } catch (err) {
+      console.log("error");
+      setError({
+        happened: true,
+        msg: err.message,
+      });
+      toast(serverError);
+    }
+  };
+
   const addNewEvent = (newEventObject) => {
-    addEvent(newEventObject);
-    onClose();
-    setEventsList(newEventObject);
-    window.location.reload(false);
+    if (!error.happened) {
+      addEventToServer(newEventObject);
+      console.log("add event succesful");
+      window.location.reload(false);
+    }
   };
 
   return (
@@ -44,7 +83,7 @@ export const CreateEvent = ({ setEventsList }) => {
           isOpen={isOpen}
           onClose={onClose}
           formLabels={formLabels}
-          newEventObject={addNewEvent}
+          formActions={addNewEvent}
         />
       </Modal>
       <Card
