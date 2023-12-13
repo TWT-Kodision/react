@@ -11,24 +11,26 @@ import {
   Input,
   ModalFooter,
   Select,
+  Stack,
 } from "@chakra-ui/react";
 
-import { useState, React } from "react";
+import { Checkbox } from "./Checkbox";
+
+import { useState, useEffect, React } from "react";
 import { useLoaderData } from "react-router-dom";
+import { ToIsoFormat, CheckedCategoriesIdArray } from "./Utils";
 
 export const loader = async () => {
-  const events = await fetch(`http://localhost:3000/events`);
   const categories = await fetch("http://localhost:3000/categories");
   const users = await fetch("http://localhost:3000/users");
   return {
-    events: await events.json(),
     categories: await categories.json(),
     users: await users.json(),
   };
 };
 
 export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
-  const { events, categories, users } = useLoaderData();
+  const { categories, users } = useLoaderData();
 
   const isEdit = formLabels.action == "edit";
 
@@ -51,7 +53,9 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
   const [image, setImage] = useState(
     isEdit ? formLabels.placeholders.image : ""
   );
-  const [category, setCategory] = useState(isEdit ? "" : "");
+  const [categoryArray, setCategory] = useState(
+    isEdit ? formLabels.placeholders.category : ""
+  );
   const [user, setUser] = useState(isEdit ? formLabels.placeholders.user : "");
 
   const isEmpty =
@@ -62,65 +66,55 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
     location === "" ||
     date === "" ||
     image === "" ||
-    category === "" ||
+    categoryArray === "" ||
     user === "";
 
   // Form data control utils ================================================================
-  const toIsoFormat = (date, time) => {
-    const isoFormat = date + "T" + time;
-    return isoFormat;
-  };
-
-  const getNewEventId = () => {
-    let maxId = 0;
-    events.map((event) => {
-      if (maxId < event.id) {
-        maxId = event.id;
+  //checkbox control
+  const [checkboxStates, setCheckboxStates] = useState(
+    categories.map((category) => {
+      if (isEdit) {
+        const isAlreadyChecked = categoryArray.includes(category.id);
+        const newObject = { ...category, checked: isAlreadyChecked };
+        return newObject;
+      } else {
+        const newObject = { ...category, checked: true };
+        return newObject;
       }
-    });
+    })
+  );
+  const updateCheckStatus = (index) => {
+    setCheckboxStates(
+      checkboxStates.map((category) =>
+        category.id === index
+          ? { ...category, checked: !category.checked }
+          : category
+      )
+    );
+  };
 
-    return maxId + 1;
-  };
-  //makes categoryId array
-  const addCategory = (newCategory) => {
-    const categories = [newCategory];
-    return categories;
-  };
+  useEffect(() => {
+    setCategory(CheckedCategoriesIdArray(checkboxStates));
+  }, [checkboxStates]);
 
   const makeEventObject = () => {
     const eventObject = {
-      id: isEdit ? formLabels.placeholders.id : getNewEventId(),
+      id: isEdit ? formLabels.placeholders.id : 0,
       createdBy: user,
       title: title,
       description: description,
       image: image,
-      categoryIds: addCategory(category),
+      categoryIds: categoryArray,
       location: location,
-      startTime: toIsoFormat(date, startTime),
-      endTime: toIsoFormat(date, endTime),
+      startTime: ToIsoFormat(date, startTime),
+      endTime: ToIsoFormat(date, endTime),
     };
     return eventObject;
   };
 
-  const newEventActions = () => {
+  const clickSendAction = () => {
     const eventObject = makeEventObject();
     formActions(eventObject);
-  };
-
-  const editEventActions = () => {
-    const editedEventObject = makeEventObject();
-    formActions(editedEventObject);
-  };
-
-  const clickSendAction = (action) => {
-    switch (action) {
-      case "new":
-        return newEventActions();
-      case "edit":
-        return editEventActions();
-      default:
-        return newEventActions();
-    }
   };
 
   //Form =================================================================================
@@ -164,18 +158,19 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
               />
 
               <FormLabel>Category</FormLabel>
-              <Select
-                required="required"
-                onChange={(e) => setCategory(Number(e.target.value))}
-                value={category}
-                placeholder="select category"
-              >
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
+              <Stack spacing={[1, 5]} direction={["column", "row"]}>
+                {checkboxStates.map((category) => (
+                  <Checkbox
+                    key={category.name}
+                    checkHandler={() => {
+                      updateCheckStatus(category.id);
+                    }}
+                    isChecked={category.checked}
+                    label={category.name}
+                    index={category.id}
+                  />
                 ))}
-              </Select>
+              </Stack>
 
               <FormLabel>Image url</FormLabel>
               <Input
@@ -228,8 +223,7 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
               <>
                 <Button
                   onClick={() => {
-                    clickSendAction(formLabels.action);
-                    onClose;
+                    clickSendAction();
                   }}
                   colorScheme="blue"
                   mr={3}
@@ -246,3 +240,17 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
     </>
   );
 };
+
+// <FormLabel>Category</FormLabel>
+// <Select
+//   required="required"
+//   onChange={(e) => setCategory(Number(e.target.value))}
+//   value={category}
+//   placeholder="select category"
+// >
+//   {categories.map((category) => (
+//     <option key={category.id} value={category.id}>
+//       {category.name}
+//     </option>
+//   ))}
+// </Select>

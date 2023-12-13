@@ -36,26 +36,13 @@ export const DeleteEvent = (eventInfo) => {
 
   const deleteEventOnServer = async (deleteContent) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/events/${deleteContent.id}`,
-        {
-          method: "DELETE",
-          body: JSON.stringify(deleteContent),
-          headers: { "Content-Type": "application/json;charset=utf-8" },
-        }
-      ).then((response) => {
-        if (!response.ok) {
-          setError({
-            happened: true,
-            msg: response.status,
-          });
-          throw new Error(response);
-        }
+      await fetch(`http://localhost:3000/events/${deleteContent.id}`, {
+        method: "DELETE",
+        body: JSON.stringify(deleteContent),
+        headers: { "Content-Type": "application/json;charset=utf-8" },
       });
-      deleteContent.id = (await response.json()).id;
-      console.log("delete event API");
     } catch (err) {
-      console.log("error");
+      console.log("delete error");
       setError({
         happened: true,
         msg: err.message,
@@ -67,6 +54,7 @@ export const DeleteEvent = (eventInfo) => {
   const deleteActions = () => {
     deleteEventOnServer(eventInfo.eventInfo);
     if (!error.happened) {
+      console.log("event deleted");
       onClose();
       navigate(`/events`);
       toast(succesToastParam);
@@ -92,7 +80,7 @@ export const DeleteEvent = (eventInfo) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure? You can't undo this action afterwards.
+              Are you sure? You can not undo this action afterwards.
             </AlertDialogBody>
 
             <AlertDialogFooter>

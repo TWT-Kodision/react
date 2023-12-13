@@ -81,7 +81,6 @@ export const EventPage = () => {
         <Stack spacing={[1, 5]} direction={["column", "row"]}>
           {" "}
           <EditEvent
-            eventCategories={categoryList()}
             user={user}
             eventInfo={event}
             dateTime={convertedDateTime}

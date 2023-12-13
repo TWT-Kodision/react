@@ -47,19 +47,11 @@ export const CreateEvent = () => {
         method: "POST",
         body: JSON.stringify(newEvent),
         headers: { "Content-Type": "application/json;charset=utf-8" },
-      }).then((response) => {
-        if (!response.ok) {
-          setError({
-            happened: true,
-            msg: response.status,
-          });
-          throw new Error(response);
-        }
       });
       newEvent.id = (await response.json()).id;
       console.log("add event API");
     } catch (err) {
-      console.log("error");
+      console.log("adding error");
       setError({
         happened: true,
         msg: err.message,

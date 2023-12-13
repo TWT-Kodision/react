@@ -2,6 +2,7 @@ import { Stack, Center, Button } from "@chakra-ui/react";
 import { useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import { Checkbox } from "./Checkbox";
+import { CheckedCategoriesIdArray, CleanArray } from "./Utils";
 
 export const loader = async () => {
   const categories = await fetch("http://localhost:3000/categories");
@@ -30,15 +31,9 @@ export const EventsFilter = ({ eventsList, clickFilter }) => {
     );
   };
 
-  //creates array with the category ids which are checked
-  const arrayCheckedCategoriesId = () =>
-    checkboxStates.map((category) =>
-      category.checked ? category.id : undefined
-    );
-
   //looks if the checked category ids contains in the event category.
   const matchedEvents = () => {
-    const checkedCategories = arrayCheckedCategoriesId();
+    const checkedCategories = CheckedCategoriesIdArray(checkboxStates);
     const isChecked = [
       eventsList.map((event) => {
         if (event.categoryIds.some((r) => checkedCategories.includes(r))) {
@@ -47,14 +42,6 @@ export const EventsFilter = ({ eventsList, clickFilter }) => {
       }),
     ];
     return isChecked[0];
-  };
-
-  // cleans array from undefined
-  const cleanArray = (array) => {
-    const cleanArray = array.filter(function (element) {
-      return element !== undefined;
-    });
-    return cleanArray;
   };
 
   return (
@@ -80,7 +67,7 @@ export const EventsFilter = ({ eventsList, clickFilter }) => {
         <Button
           onClick={() => {
             console.log("click filter");
-            clickFilter(cleanArray(matchedEvents()));
+            clickFilter(CleanArray(matchedEvents()));
           }}
           colorScheme="blue"
           m={3}

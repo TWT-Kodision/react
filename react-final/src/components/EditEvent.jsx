@@ -1,22 +1,11 @@
 import { useDisclosure, Modal, Button, useToast } from "@chakra-ui/react";
 import { EventForm } from "./EventForm";
 import { useState } from "react";
-export const EditEvent = ({
-  categories: eventCategories,
-  user,
-  eventInfo,
-  dateTime,
-  setEvent,
-}) => {
+import { ConvertDate } from "./Utils";
+export const EditEvent = ({ user, eventInfo, dateTime, setEvent }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const noErrorState = { happened: false, msg: "" };
   const [error, setError] = useState(noErrorState);
-
-  //converts date to yyyy-MM-dd
-  const convertDate = (date) => {
-    const [day, month, year] = date.split("-");
-    return year + "-" + month + "-" + day;
-  };
   const toast = useToast();
 
   const succesToastParam = {
@@ -37,24 +26,13 @@ export const EditEvent = ({
 
   const updateEventInServer = async (EditedEvent) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/events/${EditedEvent.id}`,
-        {
-          method: "PATCH",
-          body: JSON.stringify(EditedEvent),
-          headers: { "Content-Type": "application/json;charset=utf-8" },
-        }
-      ).then((response) => {
-        if (!response.ok) {
-          setError({
-            happened: true,
-            msg: response.status,
-          });
-          throw new Error(response);
-        }
+      await fetch(`http://localhost:3000/events/${EditedEvent.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(EditedEvent),
+        headers: { "Content-Type": "application/json;charset=utf-8" },
       });
-      EditedEvent.id = (await response.json()).id;
     } catch (err) {
+      console.log(err);
       console.log("error PATCH event");
       setError({
         happened: true,
@@ -63,16 +41,16 @@ export const EditEvent = ({
       toast(errorToastParam);
     }
   };
-
+  console.log(eventInfo);
   const formLabels = {
     placeholders: {
       id: eventInfo.id,
       user: user.id,
       title: eventInfo.title,
       description: eventInfo.description,
-      category: eventCategories,
+      category: eventInfo.categoryIds,
       image: eventInfo.image,
-      date: convertDate(dateTime.date),
+      date: ConvertDate(dateTime.date),
       starttime: dateTime.starttime,
       endtime: dateTime.endtime,
       location: eventInfo.location,
@@ -86,8 +64,8 @@ export const EditEvent = ({
 
   const editEventObject = (editedEventObject) => {
     updateEventInServer(editedEventObject);
-    console.log("adding complete");
     if (!error.happened) {
+      console.log("adding complete");
       setEvent(editedEventObject);
       onClose();
       toast(succesToastParam);
