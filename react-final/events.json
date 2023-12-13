@@ -80,45 +80,17 @@
       "endTime": "2023-12-24T22:08"
     },
     {
-      "id": 7,
-      "createdBy": 1,
-      "title": "asdf",
-      "description": "asdf",
-      "image": "asdf",
-      "categoryIds": [
-        1
-      ],
-      "location": "asdf",
-      "startTime": "2023-12-01T22:17",
-      "endTime": "2023-12-01T22:17"
-    },
-    {
-      "id": 8,
-      "createdBy": 1,
-      "title": "asdfhdcdfghsdfs",
-      "description": "sdfg",
-      "image": "sdfg",
-      "categoryIds": [
-        1
-      ],
-      "location": "sdfg",
-      "startTime": "2023-12-02T22:17",
-      "endTime": "2023-12-02T22:17"
-    },
-    {
-      "id": 9,
+      "id": 6,
       "createdBy": 2,
-      "title": "wert",
-      "description": "wert",
-      "image": "wert",
+      "title": "test",
+      "description": "test",
+      "image": "test",
       "categoryIds": [
-        1,
-        2,
-        3
+        2
       ],
-      "location": "wertwer",
-      "startTime": "2023-12-03T23:36",
-      "endTime": "2023-12-03T23:36"
+      "location": "tsest",
+      "startTime": "2023-12-07T00:35",
+      "endTime": "2023-12-07T00:35"
     }
   ],
   "categories": [

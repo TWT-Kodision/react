@@ -9,16 +9,25 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { EventForm } from "./EventForm";
+import { useNavigate } from "react-router-dom";
 export const CreateEvent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const noErrorState = { happened: false, msg: "" };
   const [error, setError] = useState(noErrorState);
+  const navigate = useNavigate();
   const toast = useToast();
-  const serverError = {
+  const toastServerError = {
     title: "Something went wrong while creating the event",
     description: "server error: " + error.msg,
     status: "error",
     duration: 5000,
+    isClosable: true,
+  };
+  const toastEventAdded = {
+    title: "New event created",
+    description: "New event succesfully created",
+    status: "success",
+    duration: 3000,
     isClosable: true,
   };
 
@@ -56,15 +65,18 @@ export const CreateEvent = () => {
         happened: true,
         msg: err.message,
       });
-      toast(serverError);
+      toast(toastServerError);
     }
   };
 
   const addNewEvent = (newEventObject) => {
     if (!error.happened) {
       addEventToServer(newEventObject);
-      console.log("add event succesful");
-      window.location.reload(false);
+      console.log("event succesfully added");
+      onClose();
+      navigate(`/`);
+      navigate(`/events`);
+      toast(toastEventAdded);
     }
   };
 
