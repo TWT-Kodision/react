@@ -3,7 +3,7 @@ export const ConvertDate = (date) => {
   const [day, month, year] = date.split("-");
   return year + "-" + month + "-" + day;
 };
-
+//converts date and time to iso format
 export const ToIsoFormat = (date, time) => {
   const isoFormat = date + "T" + time;
   return isoFormat;

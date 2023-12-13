@@ -80,19 +80,6 @@
       "endTime": "2023-12-24T22:08"
     },
     {
-      "id": 6,
-      "createdBy": 1,
-      "title": "test case ",
-      "description": "test",
-      "image": "testasdf",
-      "categoryIds": [
-        1
-      ],
-      "location": "test",
-      "startTime": "2023-12-07T22:09",
-      "endTime": "2023-12-07T22:09"
-    },
-    {
       "id": 7,
       "createdBy": 1,
       "title": "asdf",
@@ -117,6 +104,21 @@
       "location": "sdfg",
       "startTime": "2023-12-02T22:17",
       "endTime": "2023-12-02T22:17"
+    },
+    {
+      "id": 9,
+      "createdBy": 2,
+      "title": "wert",
+      "description": "wert",
+      "image": "wert",
+      "categoryIds": [
+        1,
+        2,
+        3
+      ],
+      "location": "wertwer",
+      "startTime": "2023-12-03T23:36",
+      "endTime": "2023-12-03T23:36"
     }
   ],
   "categories": [

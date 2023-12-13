@@ -78,7 +78,7 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
         const newObject = { ...category, checked: isAlreadyChecked };
         return newObject;
       } else {
-        const newObject = { ...category, checked: true };
+        const newObject = { ...category, checked: false };
         return newObject;
       }
     })
@@ -97,6 +97,7 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
     setCategory(CheckedCategoriesIdArray(checkboxStates));
   }, [checkboxStates]);
 
+  //object
   const makeEventObject = () => {
     const eventObject = {
       id: isEdit ? formLabels.placeholders.id : 0,
@@ -111,7 +112,7 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
     };
     return eventObject;
   };
-
+  //button click control
   const clickSendAction = () => {
     const eventObject = makeEventObject();
     formActions(eventObject);
@@ -240,17 +241,3 @@ export const EventForm = ({ isOpen, onClose, formLabels, formActions }) => {
     </>
   );
 };
-
-// <FormLabel>Category</FormLabel>
-// <Select
-//   required="required"
-//   onChange={(e) => setCategory(Number(e.target.value))}
-//   value={category}
-//   placeholder="select category"
-// >
-//   {categories.map((category) => (
-//     <option key={category.id} value={category.id}>
-//       {category.name}
-//     </option>
-//   ))}
-// </Select>
